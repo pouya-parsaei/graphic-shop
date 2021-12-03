@@ -18,9 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/category/create', function () {
-    Category::create([
-        'title' => 'test title',
-        'slug' => 'test-title',
-    ]);
+Route::get('products/all',function(){
+   return view('frontend.products.all');
 });
