@@ -24,6 +24,11 @@ class CategoriesController extends Controller
             return back()->with('failed', 'خطا در ایجاد دسته بندی');
 
         return back()->with('success', 'دسته بندی با موفقیت ایجاد شد.');
+    }
 
+    public function all()
+    {
+        $categories = Category::all();
+        return view('admin.categories.all',compact('categories'));
     }
 }
