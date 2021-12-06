@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoriesController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
@@ -13,19 +14,21 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
+Route::get('test',function(){
+    echo 'test';
 });
 
-Route::get('products/all',function(){
-    return view('frontend.products.all');
+Route::prefix('admin')->group(function(){
+    Route::prefix('categories')->group(function(){
+        Route::get('test',function(){
+            echo 'test';
+        });
+    });
 });
 
-Route::get('admin/index',function(){
-    return view('admin.index');
-});
-
-Route::get('admin/users',function(){
-    return view('admin.users.index');
+Route::prefix('admin')->group(function(){
+    Route::prefix('categories')->group(function(){
+        Route::get('create',[CategoriesController::class,'create']);
+        Route::post('',[CategoriesController::class,'store'])->name('admin.categories.store');
+    });
 });
