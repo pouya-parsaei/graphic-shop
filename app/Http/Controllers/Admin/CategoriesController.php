@@ -28,7 +28,7 @@ class CategoriesController extends Controller
 
     public function all()
     {
-        $categories = Category::all();
+        $categories = Category::paginate(1);
         return view('admin.categories.all',compact('categories'));
     }
 }

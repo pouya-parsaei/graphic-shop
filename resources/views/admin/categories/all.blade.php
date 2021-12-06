@@ -10,7 +10,8 @@
                         <h1 class="m-0 text-dark">
                             <a class="nav-link drawer" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
                             دسته بندی ها
-                            <a class="btn btn-primary float-left text-white py-2 px-4" href="{{route('admin.categories.create')}}">افزودن
+                            <a class="btn btn-primary float-left text-white py-2 px-4"
+                               href="{{route('admin.categories.create')}}">افزودن
                                 دسته بندی جدید</a>
                         </h1>
                     </div><!-- /.col -->
@@ -71,13 +72,7 @@
                         </div>
                         <!-- /.card -->
                         <div class="d-flex justify-content-center">
-                            <ul class="pagination mt-3">
-                                <li class="page-item"><a class="page-link" href="#">«</a></li>
-                                <li class="page-item"><a class="page-link" href="#">۱</a></li>
-                                <li class="page-item"><a class="page-link" href="#">۲</a></li>
-                                <li class="page-item"><a class="page-link" href="#">۳</a></li>
-                                <li class="page-item"><a class="page-link" href="#">»</a></li>
-                            </ul>
+                                {{$categories->links()}}
                         </div>
                     </div>
                 </div>
