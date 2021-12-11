@@ -5,6 +5,7 @@
         <!-- Content Header (Page header) -->
         <div class="content-header">
             <div class="container-fluid">
+                @include('errors.message')
                 <div class="row mb-2 mt-4">
                     <div class="col-12">
                         <h1 class="m-0 text-dark">
@@ -59,9 +60,13 @@
                                             <td>{{$category->title}}</td>
                                             <td>{{$category->created_at}}</td>
                                             <td>
-                                                <a href="#" class="btn btn-default btn-icons"><i class="fa fa-edit"></i></a>
-                                                <a href="#" class="btn btn-default btn-icons"><i
-                                                        class="fa fa-trash"></i></a>
+                                                <a href="{{route('admin.categories.edit',$category->id)}}" class="btn btn-default btn-icons"><i class="fa fa-edit"></i></a>
+                                                <form action="{{route('admin.categories.delete',$category->id)}}" method="POST" style="display:inline">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button class="btn btn-default btn-icons" type="submit" ><i
+                                                            class="fa fa-trash"></i></button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -72,7 +77,7 @@
                         </div>
                         <!-- /.card -->
                         <div class="d-flex justify-content-center">
-                                {{$categories->links()}}
+                            {{$categories->links()}}
                         </div>
                     </div>
                 </div>
