@@ -20,4 +20,5 @@ class ImageUploader
         }
         return $imagesPath;
     }
+
 }

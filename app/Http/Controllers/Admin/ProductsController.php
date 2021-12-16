@@ -11,6 +11,22 @@ use App\Utilities\ImageUploader;
 
 class ProductsController extends Controller
 {
+    public function downloadDemo($product_id)
+    {
+        $product = Product::findOrFail($product_id);
+        return response()->download(public_path($product->demo_url));
+    }
+
+    public function downloadSource($product_id)
+    {
+        $product = Product::findOrFail($product_id);
+        return response()->download(storage_path('app/local_storage/' . $product->source_url));
+    }
+    public function all()
+    {
+        $products = Product::paginate(10);
+        return view('admin.products.all',compact('products'));
+    }
     public function create()
     {
         $categories = Category::all();
@@ -31,7 +47,7 @@ class ProductsController extends Controller
 
         try {
             $basePath = 'products/' . $createdProduct->id . '/';
-            $sourceImageFullPath = $basePath . 'source_url' . $validatedData['thumbnail_url']->getClientOriginalName();
+            $sourceImageFullPath = $basePath . 'source_url_' . $validatedData['thumbnail_url']->getClientOriginalName();
 
             $images = [
                 'thumbnail_url' => $validatedData['thumbnail_url'],
@@ -39,7 +55,7 @@ class ProductsController extends Controller
             ];
 
             $imagesPath = ImageUploader::uploadMany($images, $basePath);
-            ImageUploader::upload($validatedData['thumbnail_url'], $sourceImageFullPath, 'local_storage');
+            ImageUploader::upload($validatedData['source_url'], $sourceImageFullPath, 'local_storage');
             $createdProduct->update([
                 'thumbnail_url' => $imagesPath['thumbnail_url'],
                 'demo_url' => $imagesPath['demo_url'],
@@ -50,4 +66,5 @@ class ProductsController extends Controller
             return back()->with('failed', $e->getMessage());
         }
     }
+
 }
