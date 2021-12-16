@@ -16,7 +16,6 @@ class ProductsController extends Controller
         $product = Product::findOrFail($product_id);
         return response()->download(public_path($product->demo_url));
     }
-
     public function downloadSource($product_id)
     {
         $product = Product::findOrFail($product_id);
@@ -32,7 +31,6 @@ class ProductsController extends Controller
         $categories = Category::all();
         return view('admin.products.add', compact('categories'));
     }
-
     public function store(StoreRequest $request)
     {
         $validatedData = $request->validated();
@@ -67,4 +65,10 @@ class ProductsController extends Controller
         }
     }
 
+    public function delete($product_id)
+    {
+        $product = Product::findOrFail($product_id);
+        $product->delete();
+        return back()->with('success','محصول حذف شد.');
+    }
 }
