@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoriesController;
+use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\ProductsController;
 use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -15,20 +16,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('test', function () {
-    echo 'test';
+
+Route::get('',function(){
+    return view('frontend.products.all');
 });
 
-Route::prefix('admin')->group(function () {
-    Route::prefix('categories')->group(function () {
-        Route::get('test', function () {
-            echo 'test';
-        });
-    });
-});
-Route::get('test', function () {
-    dd(bcrypt('password'));
-});
 Route::prefix('admin')->group(function () {
     Route::prefix('categories')->group(function () {
         Route::get('', [CategoriesController::class, 'all'])->name('admin.categories.all');
@@ -57,4 +49,7 @@ Route::prefix('admin')->group(function () {
         Route::put('{user_id}/update',[UsersController::class,'update'])->name('admin.users.update');
         Route::delete('{user_id}/delete',[UsersController::class,'delete'])->name('admin.users.delete');
     });
-});
+    Route::prefix('orders')->group(function () {
+        Route::get('',[OrdersController::class,'all'])->name('admin.orders.all');
+    });
+    });
