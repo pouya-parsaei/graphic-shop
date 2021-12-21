@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\ProductsController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Home\HomeController;
+use App\Http\Controllers\Home\ProductsController as HomeProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +19,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('',function(){
-    return view('frontend.products.all');
+Route::prefix('')->group(function(){
+    Route::get('',[HomeProductController::class,'index'])->name('home.products.all');
+    Route::get('{product_id}/show',[HomeProductController::class,'show'])->name('home.products.show');
 });
 
 Route::prefix('admin')->group(function () {
