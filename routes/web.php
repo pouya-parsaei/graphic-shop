@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\ProductsController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Home\BasketController;
+use App\Http\Controllers\Home\CheckoutController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Home\ProductsController as HomeProductController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +24,9 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('')->group(function(){
     Route::get('',[HomeProductController::class,'index'])->name('home.products.all');
     Route::get('{product_id}/show',[HomeProductController::class,'show'])->name('home.products.show');
+    Route::get('{product_id}/addToBasket',[BasketController::class,'addToBasket'])->name('home.basket.add');
+    Route::get('{product_id}/removeFromBasket',[BasketController::class,'removeFromBasket'])->name('home.basket.remove');
+    Route::get('checkout',[CheckoutController::class,'show'])->name('home.checkout');
 });
 
 Route::prefix('admin')->group(function () {
