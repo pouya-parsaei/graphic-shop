@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('pay',[PaymentController::class,'pay']);
 
 Route::prefix('')->group(function(){
     Route::get('',[HomeProductController::class,'index'])->name('home.products.all');
@@ -64,3 +63,8 @@ Route::prefix('admin')->group(function () {
         Route::get('',[OrdersController::class,'all'])->name('admin.orders.all');
     });
     });
+
+Route::prefix('payment')->group(function () {
+    Route::get('pay',[PaymentController::class,'pay'])->name('payment.pay');
+    Route::get('callback',[PaymentController::class,'callback'])->name('payment.callback');
+});
