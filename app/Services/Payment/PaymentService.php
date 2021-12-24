@@ -16,7 +16,7 @@ class PaymentService
 
     public function pay()
     {
-        $this->findProvider()->pay();
+        return $this->findProvider()->pay();
     }
 
     private function findProvider()
