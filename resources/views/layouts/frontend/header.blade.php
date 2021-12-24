@@ -88,13 +88,7 @@
                     </div>
 
                     <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart"
-                         @if(is_null(json_decode(Cookie::get('basket'), true)))
-                         data-notify="0">
-                        @endif
-
-                    @if(!is_null(json_decode(Cookie::get('basket'), true)))
-                         data-notify="{{ count(json_decode(Cookie::get('basket'),true)) }}">
-                        @endif
+                         data-notify="{{is_null(Cookie::get('basket')) ? 0 : count(json_decode(Cookie::get('basket'),true))}}">
                         <i class="zmdi zmdi-shopping-cart"></i>
                     </div>
                 </div>
@@ -188,9 +182,9 @@
                     @foreach( json_decode(Cookie::get('basket'),true) as $id=>$value)
                         <li class="header-cart-item flex-w flex-t m-b-12">
                             <a href="{{ route('home.basket.remove',$id) }}">
-                            <div class="header-cart-item-img">
-                                <img src="/{{ $value['demo_url'] }}" alt="IMG">
-                            </div>
+                                <div class="header-cart-item-img">
+                                    <img src="/{{ $value['demo_url'] }}" alt="IMG">
+                                </div>
                             </a>
                             <div class="header-cart-item-txt p-t-8">
                                 <a href="single.php" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
@@ -208,9 +202,7 @@
 
             <div class="w-full">
                 <div class="header-cart-total w-full p-tb-40">
-                    @if(!is_null(json_decode(Cookie::get('basket'), true)))
-                        جمع کل: {{array_sum(array_column(json_decode(Cookie::get('basket'),true),'price'))}} هزار تومان
-                    @endif
+                        جمع کل: {{is_null(Cookie::get('basket')) ? 0 : array_sum(array_column(json_decode(Cookie::get('basket'),true),'price'))}} هزار تومان
                 </div>
 
                 <div class="header-cart-buttons flex-w w-full">
