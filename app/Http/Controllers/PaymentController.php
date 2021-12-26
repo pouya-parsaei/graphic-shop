@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Payment\PayRequest;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\User;
 use App\Services\Payment\PaymentService;
@@ -18,37 +19,57 @@ class PaymentController extends Controller
         $validatedData = $request->validated();
 
         $user = User::firstOrCreate([
-            'email' =>$validatedData['email'],
-        ],[
-            'name' =>$validatedData['name'],
-            'email' =>$validatedData['email'],
+            'email' => $validatedData['email'],
+        ], [
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
             'mobile' => $validatedData['mobile'],
         ]);
 
 
         try {
-            $orderItems = json_decode(Cookie::get('basket'),true);
+            $orderItems = json_decode(Cookie::get('basket'), true);
             $products = Product::findMany(array_keys($orderItems));
-            $productsPrice = array_sum(array_column($orderItems,'price'));
-            $ref_code = Str::random(30);
+            $productsPrice = $products->sum('price');
+            $refCode = Str::random(30);
+
             $createdOrder = Order::create([
-                'amount'=>$productsPrice,
-                'ref_code'=>$ref_code,
-                'status' =>'unpaid',
-                'user_id'=>$user->id,
+                'amount' => $productsPrice,
+                'ref_code' => $refCode,
+                'status' => 'unpaid',
+                'user_id' => $user->id,
             ]);
 
-            $createdOrder->orderItems->createMany();
+            $orderItemsForCreatedOrder = $products->map(function ($product) {
+                $currentProduct = $product->only(['price', 'id']);
+                $currentProduct['product_id'] = $currentProduct['id'];
+                unset($currentProduct['id']);
+                return $currentProduct;
+            });
 
-        }catch (\Exception $e) {
-            return back()->with('failed',$e->getMessage());
+            $createdOrder->orderItems()->createMany($orderItemsForCreatedOrder->toArray());
+
+            $refId = rand(1111, 9999);
+
+            $createdPayment = Payment::create([
+                'gateway' => 'idpay',
+                'ref_id' => $refId,
+                'res_id' => $refId,
+                'status' => 'unpaid',
+                'order_id' => $createdOrder->id
+            ]);
+
+            $idpayRequest = new IDPayRequest([
+                'amount' => $productsPrice,
+                'user' => $user,
+                'orderId' => $refCode
+            ]);
+            $paymentService = new PaymentService(PaymentService::IDPAY, $idpayRequest);
+            return $paymentService->pay();
+        } catch (\Exception $e) {
+            return back()->with('failed', $e->getMessage());
         }
 
-//        $idpayRequest = new IDPayRequest([
-//            'amount' => 1000,
-//            'user' => $user
-//        ]);
-//        $paymentService = new PaymentService(PaymentService::IDPAY, $idpayRequest);
     }
 
     public function callback()

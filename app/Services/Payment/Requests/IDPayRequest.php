@@ -8,11 +8,13 @@ class IDPayRequest implements RequestInterface
 {
     private $amount;
     private $user;
+    private $orderId;
 
     public function __construct(array $data)
     {
         $this->amount = $data['amount'];
         $this->user = $data['user'];
+        $this->orderId = $data['orderId'];
     }
 
     public function getAmount()
@@ -23,6 +25,11 @@ class IDPayRequest implements RequestInterface
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function getOrderId()
+    {
+        return $this->orderId;
     }
 }
 

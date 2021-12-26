@@ -10,12 +10,13 @@ class IDPayProvider extends AbstractProvicerInterface implements PayableInterfac
 {
     public function pay()
     {
+        dd($this->request);
         $params = array(
             'order_id' => $this->request->getOrderId(),
             'amount' => $this->request->getAmount(),
-            'name' => $this->request->getUserName(),
-            'phone' => $this->request->getUserMobile(),
-            'mail' => $this->request->getUserEmail(),
+            'name' => $this->request->getUser()->name,
+            'phone' => $this->request->getUser()->mobile,
+            'mail' => $this->request->getUser()->email,
             'callback' => route('payment.callback'),
         );
 
@@ -28,6 +29,9 @@ class IDPayProvider extends AbstractProvicerInterface implements PayableInterfac
             'X-API-KEY: '.$this->request->getAPIKey().'',
             'X-SANDBOX: 1'
         ));
+        $result = curl_exec($ch);
+        curl_close($ch);
+        dd($result);
     }
 
     public function verify()
