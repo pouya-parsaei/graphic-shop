@@ -10,7 +10,6 @@ class IDPayProvider extends AbstractProvicerInterface implements PayableInterfac
 {
     public function pay()
     {
-        dd($this->request);
         $params = array(
             'order_id' => $this->request->getOrderId(),
             'amount' => $this->request->getAmount(),
@@ -31,7 +30,11 @@ class IDPayProvider extends AbstractProvicerInterface implements PayableInterfac
         ));
         $result = curl_exec($ch);
         curl_close($ch);
-        dd($result);
+        $result = json_decode($result,true);
+        if(isset($result['error_code'])){
+            throw new \InvalidArgumentException($result['error_message']);
+        }
+        return redirect()->away($result['link']);
     }
 
     public function verify()

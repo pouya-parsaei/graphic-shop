@@ -29,6 +29,11 @@ class PaymentController extends Controller
 
         try {
             $orderItems = json_decode(Cookie::get('basket'), true);
+
+            if(count($orderItems) <= 0){
+                throw new \InvalidArgumentException('سبد خرید شما خالی است.');
+            }
+
             $products = Product::findMany(array_keys($orderItems));
             $productsPrice = $products->sum('price');
             $refCode = Str::random(30);
@@ -62,7 +67,8 @@ class PaymentController extends Controller
             $idpayRequest = new IDPayRequest([
                 'amount' => $productsPrice,
                 'user' => $user,
-                'orderId' => $refCode
+                'orderId' => $refCode,
+                'apiKey' => config('services.gateways.idpay.api_key'),
             ]);
             $paymentService = new PaymentService(PaymentService::IDPAY, $idpayRequest);
             return $paymentService->pay();
